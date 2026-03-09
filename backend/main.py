@@ -7,8 +7,8 @@ import os
 from routes.triage import router as triage_router
 from routes.email import router as email_router
 
-from dotenv import load_dotenv
-load_dotenv()
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 app = FastAPI(title="TriageAgent API")
 

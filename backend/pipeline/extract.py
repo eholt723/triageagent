@@ -1,5 +1,14 @@
 import json
+import re
 from services.groq_client import chat_completion
+
+
+def _parse_json(text: str) -> dict:
+    text = text.strip()
+    match = re.search(r'```(?:json)?\s*([\s\S]*?)\s*```', text)
+    if match:
+        text = match.group(1).strip()
+    return json.loads(text)
 
 SYSTEM_PROMPT = """You are an expert at extracting key information from emails. Analyze the provided email and return a JSON object with exactly these fields:
 - sender_intent: a single sentence describing what the sender wants to achieve
@@ -18,4 +27,4 @@ def extract(email_text: str) -> dict:
         ],
         temperature=0.1,
     )
-    return json.loads(content)
+    return _parse_json(content)

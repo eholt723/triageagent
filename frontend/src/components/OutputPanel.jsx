@@ -9,10 +9,10 @@ export default function OutputPanel({ stages }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-lg font-semibold text-gray-800">Pipeline Output</h2>
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Pipeline Output</h2>
 
       {idle && (
-        <div className="text-sm text-gray-400 mt-8 text-center">
+        <div className="text-sm text-gray-400 dark:text-gray-600 mt-8 text-center">
           Results will appear here once you analyze an email.
         </div>
       )}

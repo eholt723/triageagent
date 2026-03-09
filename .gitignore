@@ -1,4 +1,5 @@
 .env
+scripts/
 CLAUDE.md
 .claude/
 node_modules/

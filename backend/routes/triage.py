@@ -20,7 +20,7 @@ async def triage(request: TriageRequest):
     async def event_stream():
         try:
             # Stage 1: Classify
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
             classification = await loop.run_in_executor(None, classify, request.email_text)
             yield stage_event("classify", classification, done=True)
 
