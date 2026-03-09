@@ -1,0 +1,13 @@
+.env
+CLAUDE.md
+.claude/
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+dist/
+.DS_Store
+*.egg-info/
+.pytest_cache/
+htmlcov/
+.coverage
