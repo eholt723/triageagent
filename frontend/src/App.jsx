@@ -81,15 +81,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between">
-        <div>
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 relative flex items-center justify-center">
+        <div className="text-center">
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">TriageAgent</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">AI-powered email triage and draft responder</p>
         </div>
         <button
           onClick={() => setDark((d) => !d)}
           aria-label="Toggle dark mode"
-          className="p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="absolute right-6 p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
         >
           {dark ? (
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
@@ -115,8 +115,8 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="mt-12 py-4 border-t border-gray-200 dark:border-gray-800 text-center text-xs text-gray-400 dark:text-gray-600">
-        Created by Eric Holt
+      <footer className="fixed bottom-4 right-5 text-xs text-gray-400 dark:text-gray-600 text-right leading-tight">
+        Created by<br />Eric Holt
       </footer>
     </div>
   )
