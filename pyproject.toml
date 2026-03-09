@@ -1,0 +1,6 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["backend"]
+
+[tool.pytest-dotenv]
+env_files = [".env"]
