@@ -1,6 +1,9 @@
-import pytest
-from unittest.mock import patch
+"""Unit tests for the classification pipeline stage.
+
+Tests use mocked Groq responses — no API key required.
+"""
 import json
+from unittest.mock import patch
 
 MOCK_CLASSIFICATION = {
     "email_type": "support_request",

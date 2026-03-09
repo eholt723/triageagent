@@ -1,6 +1,9 @@
-import pytest
-from unittest.mock import patch
+"""Unit tests for the extraction pipeline stage.
+
+Tests use mocked Groq responses — no API key required.
+"""
 import json
+from unittest.mock import patch
 
 MOCK_EXTRACTION = {
     "sender_intent": "The sender wants to reset their password.",

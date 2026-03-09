@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Git & editor
+.git/
+.gitignore
+.DS_Store
+
+# Project-specific
+.env
+CLAUDE.md
+.claude/
+
+# Docs
+README.md
