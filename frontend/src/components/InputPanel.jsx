@@ -43,7 +43,8 @@ export default function InputPanel({ emailText, setEmailText, onAnalyze, loading
         <p className="text-sm text-gray-500 dark:text-gray-400">The AI pipeline will classify, extract, and draft a reply in real time.</p>
       </div>
 
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-2 flex-wrap items-center">
+        <span className="text-xs text-gray-400 dark:text-gray-500">Examples:</span>
         {SAMPLE_EMAILS.map((s) => (
           <button
             key={s.label}
@@ -62,13 +63,22 @@ export default function InputPanel({ emailText, setEmailText, onAnalyze, loading
         onChange={(e) => setEmailText(e.target.value)}
       />
 
-      <button
-        onClick={onAnalyze}
-        disabled={loading || !emailText.trim()}
-        className="w-full py-3 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white font-semibold rounded-xl transition-colors"
-      >
-        {loading ? 'Analyzing...' : 'Analyze & Draft Reply'}
-      </button>
+      <div className="flex gap-3">
+        <button
+          onClick={onAnalyze}
+          disabled={loading || !emailText.trim()}
+          className="flex-1 py-3 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white font-semibold rounded-xl transition-colors"
+        >
+          {loading ? 'Analyzing...' : 'Analyze & Draft Reply'}
+        </button>
+        <button
+          onClick={() => setEmailText('')}
+          disabled={loading || !emailText.trim()}
+          className="px-5 py-3 border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 rounded-xl transition-colors text-sm font-medium"
+        >
+          Reset
+        </button>
+      </div>
     </div>
   )
 }
