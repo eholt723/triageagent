@@ -37,6 +37,8 @@ async def triage(request: TriageRequest):
             yield stage_event("draft", "", done=True)
 
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             yield error_event(str(e))
 
     return StreamingResponse(
