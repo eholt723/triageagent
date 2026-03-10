@@ -84,7 +84,7 @@ export default function App() {
       <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 relative flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">TriageAgent</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">AI-powered email triage and draft responder</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Paste an email. Get a ready-to-edit reply in seconds.</p>
         </div>
         <button
           onClick={() => setDark((d) => !d)}
