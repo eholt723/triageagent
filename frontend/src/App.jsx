@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route, NavLink } from 'react-router-dom'
 import InputPanel from './components/InputPanel'
 import OutputPanel from './components/OutputPanel'
+import AboutPage from './components/AboutPage'
 
 const INITIAL_STAGES = {
   classifying: false,
@@ -82,10 +84,30 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
       <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 relative flex items-center justify-center">
+        <div className="absolute left-6 flex items-center gap-4">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `text-sm font-medium transition-colors ${isActive ? 'text-cyan-600 dark:text-cyan-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'}`
+            }
+          >
+            App
+          </NavLink>
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              `text-sm font-medium transition-colors ${isActive ? 'text-cyan-600 dark:text-cyan-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'}`
+            }
+          >
+            About
+          </NavLink>
+        </div>
+
         <div className="text-center">
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">TriageAgent</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">Paste an email. Get a ready-to-edit reply in seconds.</p>
         </div>
+
         <button
           onClick={() => setDark((d) => !d)}
           aria-label="Toggle dark mode"
@@ -103,17 +125,25 @@ export default function App() {
         </button>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <InputPanel
-            emailText={emailText}
-            setEmailText={setEmailText}
-            onAnalyze={handleAnalyze}
-            loading={loading}
-          />
-          <OutputPanel stages={stages} />
-        </div>
-      </main>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <main className="max-w-6xl mx-auto px-4 py-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <InputPanel
+                  emailText={emailText}
+                  setEmailText={setEmailText}
+                  onAnalyze={handleAnalyze}
+                  loading={loading}
+                />
+                <OutputPanel stages={stages} />
+              </div>
+            </main>
+          }
+        />
+        <Route path="/about" element={<AboutPage />} />
+      </Routes>
 
       <footer className="fixed bottom-4 right-5 text-xs text-gray-400 dark:text-gray-600 text-right leading-tight">
         Created by<br />Eric Holt
