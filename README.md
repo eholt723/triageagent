@@ -1,3 +1,12 @@
+---
+title: TriageAgent
+emoji: 📬
+colorFrom: cyan
+colorTo: blue
+sdk: docker
+pinned: false
+---
+
 # TriageAgent
 
 AI-powered email triage and draft responder. Paste an email — a three-stage agentic pipeline classifies it, extracts key details, and drafts a professional reply. Each stage streams word-by-word to the browser in real time. The drafted reply is editable and can be approved and sent as a real email via Gmail.
