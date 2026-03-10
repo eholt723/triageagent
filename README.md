@@ -39,12 +39,11 @@ If confidence is below 0.75, the UI flags the result as uncertain and prompts ca
 ### Backend
 
 ```bash
-cd backend
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-cp ../.env.example ../.env   # fill in your keys
-uvicorn main:app --reload
+pip install -r backend/requirements.txt
+cp .env.example .env   # fill in your keys
+cd backend && uvicorn main:app --reload
 ```
 
 ### Frontend
@@ -63,8 +62,8 @@ Frontend proxies `/api` requests to `http://localhost:8000` during dev.
 # Unit tests (no API key needed — all mocked)
 pytest tests/unit/ -v
 
-# Integration tests (requires GROQ_API_KEY)
-GROQ_API_KEY=your_key pytest tests/integration/ -v
+# Integration tests (requires GROQ_API_KEY in .env)
+pytest tests/integration/ -v
 ```
 
 ## Environment Variables
