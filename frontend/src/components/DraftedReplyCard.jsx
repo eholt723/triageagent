@@ -127,7 +127,7 @@ export default function DraftedReplyCard({ text, loading, subject }) {
       <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm">
         <h3 className="font-semibold text-gray-700 dark:text-gray-300 mb-3">Drafted Reply</h3>
         <textarea
-          className="w-full text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg p-3 resize-y min-h-[160px] focus:outline-none focus:ring-2 focus:ring-cyan-400 dark:focus:ring-cyan-500"
+          className="w-full text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg p-3 resize-y min-h-[260px] focus:outline-none focus:ring-2 focus:ring-cyan-400 dark:focus:ring-cyan-500"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
         />
