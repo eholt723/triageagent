@@ -39,4 +39,11 @@ async def triage(request: TriageRequest):
         except Exception as e:
             yield error_event(str(e))
 
-    return StreamingResponse(event_stream(), media_type="text/event-stream")
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )
