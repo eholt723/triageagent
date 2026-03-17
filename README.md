@@ -31,14 +31,29 @@ If confidence is below 0.75, the UI flags the result as uncertain and prompts ca
 ## Architecture
 
 ```
-Browser → POST /api/triage → FastAPI route
-                               ├── classify.py  → Groq (non-streaming) → SSE {stage: classify, content: JSON}
-                               ├── extract.py   → Groq (non-streaming) → SSE {stage: extract, content: JSON}
-                               └── draft.py     → Groq (streaming)     → SSE {stage: draft, content: chunk...}
-                                                                                      ↓
-                                                                           Browser renders word-by-word
-                                                                                      ↓
-                                                                           User edits → POST /api/send → Gmail API
+     Email Input
+          │
+          ▼
+  ┌───────────────┐      type · urgency · confidence (JSON)
+  │   Classify    │ ────────────────────────────────────────▶ Browser
+  └───────────────┘
+          │
+          ▼
+  ┌───────────────┐      intent · action items · tone (JSON)
+  │    Extract    │ ────────────────────────────────────────▶ Browser
+  └───────────────┘
+          │
+          ▼
+  ┌───────────────┐      professional reply (streamed text)
+  │     Draft     │ ────────────────────────────────────────▶ Browser
+  └───────────────┘
+                                                                  │
+                                                            Human review
+                                                                  │
+                                                                  ▼
+                                                       ┌────────────────────┐
+                                                       │   POST /api/send   │ ──▶ Gmail API
+                                                       └────────────────────┘
 ```
 
 | Layer | Responsibility |
