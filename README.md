@@ -28,13 +28,42 @@ Email input → [Classify] → [Extract] → [Draft] → Human review → Send
 
 If confidence is below 0.75, the UI flags the result as uncertain and prompts careful review before sending.
 
+## Architecture
+
+```
+Browser → POST /api/triage → FastAPI route
+                               ├── classify.py  → Groq (non-streaming) → SSE {stage: classify, content: JSON}
+                               ├── extract.py   → Groq (non-streaming) → SSE {stage: extract, content: JSON}
+                               └── draft.py     → Groq (streaming)     → SSE {stage: draft, content: chunk...}
+                                                                                      ↓
+                                                                           Browser renders word-by-word
+                                                                                      ↓
+                                                                           User edits → POST /api/send → Gmail API
+```
+
+| Layer | Responsibility |
+|---|---|
+| `POST /api/triage` | Runs all three pipeline stages sequentially; each yields SSE events as it completes |
+| `classify.py` | Non-streaming Groq call; returns structured JSON: type, urgency, confidence |
+| `extract.py` | Non-streaming Groq call; returns structured JSON: intent, main ask, action items, tone |
+| `draft.py` | Streaming Groq call; yields text chunks word-by-word to the browser |
+| Frontend SSE consumer | Reads the event stream, routes each event to the correct stage card by `stage` field |
+| `POST /api/send` | Substitutes `[Your Name]`, sends the final reply via Gmail OAuth2 |
+
+---
+
 ## Tech Stack
 
-- **Frontend** — React + Vite + Tailwind CSS
-- **Backend** — Python + FastAPI with SSE streaming
-- **LLM** — Groq (`llama-3.3-70b-versatile`)
-- **Email** — Gmail API with OAuth2
-- **Deploy** — Hugging Face Spaces (Docker) + GitHub Actions CD
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, Tailwind CSS 3 |
+| Backend | FastAPI, Python 3.11 |
+| LLM | Groq — `llama-3.3-70b-versatile` |
+| Validation | Pydantic v2 |
+| Real-time | Server-Sent Events (SSE) via `sse-starlette` |
+| Email | Gmail API, OAuth2 (`google-api-python-client`) |
+| Retry | Tenacity |
+| Hosting | Hugging Face Spaces (Docker) + GitHub Actions CD |
 
 ## Local Development
 
@@ -83,20 +112,43 @@ pytest tests/integration/ -v
 ```
 triageagent/
 ├── backend/
-│   ├── main.py                  # FastAPI app entry point
-│   ├── pipeline/                # classify.py, extract.py, draft.py
-│   ├── routes/                  # triage.py (SSE), email.py (send)
-│   ├── services/                # groq_client.py, gmail.py, sse.py
-│   └── models/                  # Pydantic schemas
+│   ├── main.py                        # FastAPI app, explicit favicon route, SPA catch-all
+│   ├── pipeline/
+│   │   ├── classify.py                # Stage 1: email type, urgency, confidence (structured JSON)
+│   │   ├── extract.py                 # Stage 2: intent, main ask, action items, tone (structured JSON)
+│   │   └── draft.py                   # Stage 3: professional reply (streaming text)
+│   ├── routes/
+│   │   ├── triage.py                  # POST /api/triage — SSE endpoint, runs all three stages
+│   │   └── email.py                   # POST /api/send — sends drafted reply via Gmail
+│   ├── services/
+│   │   ├── groq_client.py             # Groq singleton, .strip() on API key, Tenacity retries
+│   │   ├── gmail.py                   # OAuth2 Gmail send using refresh token
+│   │   └── sse.py                     # SSE event formatting helpers
+│   └── models/
+│       └── schemas.py                 # Pydantic v2 request/response models
 ├── frontend/
 │   └── src/
-│       ├── App.jsx              # SSE stream consumer + state machine
-│       └── components/          # InputPanel, OutputPanel, stage cards
+│       ├── App.jsx                    # SSE stream consumer, routing, dark mode state
+│       ├── main.jsx                   # React entry point
+│       └── components/
+│           ├── InputPanel.jsx         # Email textarea, sample email buttons, Reset button
+│           ├── OutputPanel.jsx        # Renders all three stage cards in order
+│           ├── ClassificationCard.jsx # Collapsible card: type, urgency, confidence
+│           ├── ExtractedDetailsCard.jsx # Collapsible card: intent, action items, tone
+│           ├── DraftedReplyCard.jsx   # Editable textarea, Approve & Send modal
+│           └── AboutPage.jsx          # /about route: pipeline, stack, highlights
 ├── tests/
-│   ├── unit/                    # Mocked, no API key needed
-│   └── integration/             # Live API calls, requires GROQ_API_KEY
-├── Dockerfile                   # Multi-stage: Vite build + FastAPI serve
-└── .github/workflows/deploy.yml # CD to Hugging Face Spaces
+│   ├── unit/                          # Mocked Groq calls, no API key needed (6 tests)
+│   │   ├── test_classify.py
+│   │   └── test_extract.py
+│   ├── integration/                   # Live Groq calls, requires GROQ_API_KEY
+│   │   └── test_pipeline_integration.py
+│   └── conftest.py                    # pytest fixtures
+├── Dockerfile                         # Multi-stage: node:20-alpine Vite build → python:3.11-slim serve
+├── pyproject.toml                     # pytest config: testpaths, pythonpath, dotenv
+└── .github/workflows/
+    ├── ci.yml                         # Unit tests on push/PR to main (no secrets needed)
+    └── deploy.yml                     # Force-push to HF Space on push to main
 ```
 
 ## Deployment
