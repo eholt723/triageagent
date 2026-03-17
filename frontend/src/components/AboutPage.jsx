@@ -35,7 +35,7 @@ const HIGHLIGHTS = [
   'Structured JSON extraction with automatic fallback parsing',
   'Retry logic on all AI calls to handle transient failures gracefully',
   'Editable draft with one-click email delivery via Gmail OAuth2',
-  'Full test suite: unit tests (mocked) and integration tests (live API)',
+  '6 unit tests covering classify and extract pipeline stages — all mocked, no API key required — plus integration tests that validate live Groq responses end-to-end',
   'Automated deployment — every push to main ships to production',
 ]
 
