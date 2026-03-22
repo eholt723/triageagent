@@ -166,6 +166,22 @@ triageagent/
     └── deploy.yml                     # Force-push to HF Space on push to main
 ```
 
+## Design Decisions
+
+- **Non-streaming calls for classify and extract, streaming only for draft.** The alternative was to stream all three stages. Classify and extract return structured JSON, which must be fully received and parsed before the next stage can run — streaming the response would require buffering the entire thing anyway and adds no UX benefit. Streaming is reserved for draft, where word-by-word output is genuinely useful for a 60-second demo.
+
+- **FastAPI serves the compiled React build as static files.** The alternative was a separate static file server (nginx, CDN). Hugging Face Spaces exposes a single container on a single port. Serving the Vite build from FastAPI via `StaticFiles` keeps the deployment to one process with no sidecar, which is the only viable option on the free tier.
+
+- **`X-Accel-Buffering: no` header on all SSE responses.** Hugging Face Spaces runs nginx as a reverse proxy that buffers upstream responses by default. Without this header, SSE events accumulate in the nginx buffer and arrive in bursts rather than word-by-word, which breaks the streaming UX entirely. This header is invisible in local dev but required in production.
+
+## Future Improvements
+
+- **Per-user OAuth2 flows** — currently all outbound email sends through a single shared Gmail account. Production would need each user to authorize their own account.
+- **Email thread context** — each triage run is stateless. A production system would pass the full reply thread into the prompt so the draft accounts for prior conversation history.
+- **Direct inbox integration** — users currently paste email text manually. A webhook or polling integration with Gmail/Outlook would remove that friction entirely.
+- **Rate limiting** — the `/api/triage` endpoint has no per-IP limits. Required before handling real user traffic at scale.
+- **Persistent session storage** — triage results are ephemeral. A production system would store drafts and classification history for audit trails and analytics.
+
 ## Deployment
 
 Deploys automatically to Hugging Face Spaces on push to `main`. Requires these GitHub secrets:

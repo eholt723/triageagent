@@ -29,6 +29,33 @@ const STACK = [
   { name: 'GitHub Actions', role: 'Continuous deployment' },
 ]
 
+const USE_CASES = [
+  {
+    title: 'Customer Support',
+    desc: 'Support teams handle hundreds of emails daily. The pipeline classifies ticket type and urgency, extracts the core issue, and drafts a resolution response — so agents start from a polished reply instead of a blank page.',
+  },
+  {
+    title: 'Sales Development',
+    desc: 'Inbound lead emails vary wildly in intent. The pipeline identifies whether a prospect is ready to buy, just browsing, or asking a pricing question, then drafts a targeted follow-up matched to their specific ask.',
+  },
+  {
+    title: 'HR & Recruiting',
+    desc: 'Job application inboxes fill fast. The pipeline classifies applicants by role and urgency, extracts relevant qualifications, and drafts an initial outreach — interview invite, screening call, or polite pass.',
+  },
+  {
+    title: 'IT Helpdesk',
+    desc: 'Employees report issues in unstructured emails. The pipeline classifies by system and severity, extracts the affected component and reproduction steps, and drafts a first-response acknowledgment with next steps.',
+  },
+  {
+    title: 'Legal & Compliance',
+    desc: 'Contract requests and compliance inquiries have high stakes. The pipeline classifies by request type, extracts key parties and deadlines, and drafts a structured acknowledgment — reducing response time without sacrificing accuracy.',
+  },
+  {
+    title: 'Product Feedback',
+    desc: 'User feedback mixes feature requests, bug reports, and praise. The pipeline classifies by type, extracts the specific ask or issue, and drafts a response that acknowledges the feedback and sets clear expectations.',
+  },
+]
+
 const HIGHLIGHTS = [
   'Streams AI output word-by-word in real time — no waiting for the full response',
   'Three-stage agentic pipeline: each stage informs the next',
@@ -81,6 +108,27 @@ export default function AboutPage() {
                 <div className="font-semibold text-gray-800 dark:text-gray-200 mb-1">{stage.name}</div>
                 <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{stage.desc}</p>
               </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Use Cases */}
+      <section className="mb-12">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">Where This Gets Used</h3>
+        <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+          Most organizations are drowning in email — and most of that email follows patterns that AI can recognize
+          instantly. The same classify-extract-draft pipeline that powers this app applies anywhere a team receives
+          high volumes of structured requests and needs to respond quickly and consistently. Here's where it fits.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {USE_CASES.map((item) => (
+            <div
+              key={item.title}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4"
+            >
+              <div className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">{item.title}</div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
