@@ -10,7 +10,7 @@ pinned: false
 
 # TriageAgent
 
-[![CI](https://github.com/eholt723/triageagent/actions/workflows/ci.yml/badge.svg)](https://github.com/eholt723/triageagent/actions/workflows/ci.yml)
+[![CI/CD](https://github.com/eholt723/triageagent/actions/workflows/ci.yml/badge.svg)](https://github.com/eholt723/triageagent/actions/workflows/ci.yml)
 
 AI-powered email triage and draft responder. Paste an email — a three-stage agentic pipeline classifies it, extracts key details, and drafts a professional reply. Each stage streams word-by-word to the browser in real time. The drafted reply is editable and can be approved and sent as a real email via Gmail.
 
@@ -66,6 +66,12 @@ If confidence is below 0.75, the UI flags the result as uncertain and prompts ca
 | `POST /api/send` | Substitutes `[Your Name]`, sends the final reply via Gmail OAuth2 |
 
 ---
+
+## Deployment
+
+Every push to `main` triggers the CI/CD workflow: unit tests run first, and if they pass, the repo is automatically force-pushed to [Hugging Face Spaces](https://huggingface.co/spaces/eholt723/triageagent) where Docker rebuilds and serves the app. The live demo is at https://eholt723-triageagent.hf.space/.
+
+Requires a `HF_TOKEN` secret set in GitHub Actions (Hugging Face write token).
 
 ## Tech Stack
 
@@ -162,8 +168,7 @@ triageagent/
 ├── Dockerfile                         # Multi-stage: node:20-alpine Vite build → python:3.11-slim serve
 ├── pyproject.toml                     # pytest config: testpaths, pythonpath, dotenv
 └── .github/workflows/
-    ├── ci.yml                         # Unit tests on push/PR to main (no secrets needed)
-    └── deploy.yml                     # Force-push to HF Space on push to main
+    └── ci.yml                         # CI/CD: unit tests → deploy to HF Spaces on push to main
 ```
 
 ## Design Decisions
@@ -182,12 +187,3 @@ triageagent/
 - **Rate limiting** — the `/api/triage` endpoint has no per-IP limits. Required before handling real user traffic at scale.
 - **Persistent session storage** — triage results are ephemeral. A production system would store drafts and classification history for audit trails and analytics.
 
-## Deployment
-
-Deploys automatically to Hugging Face Spaces on push to `main`. Requires these GitHub secrets:
-
-- `HF_TOKEN` — Hugging Face write token
-- `GROQ_API_KEY`
-- `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`
-
-Update the HF Space URL in [.github/workflows/deploy.yml](.github/workflows/deploy.yml) before first deploy.
